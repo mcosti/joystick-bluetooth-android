@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import io.github.controlwear.virtual.joystick.android.JoystickView;
+
 import static android.widget.Toast.makeText;
 
 
@@ -92,65 +94,112 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button forward = (Button) findViewById(R.id.forward);
-        forward.setOnClickListener(new View.OnClickListener() {
+//        Button forward = (Button) findViewById(R.id.forward);
+//        forward.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (mGatt != null) {
+//
+//                    BluetoothGattService service = mGatt.getService(UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"));
+//                    BluetoothGattCharacteristic characteristic = service.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"));
+//
+//                    characteristic.setValue("F".getBytes());
+//                    mGatt.writeCharacteristic(characteristic);
+//                }
+//            }
+//        });
+//
+//        Button back = (Button) findViewById(R.id.back);
+//        back.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (mGatt != null) {
+//
+//                    BluetoothGattService service = mGatt.getService(UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"));
+//                    BluetoothGattCharacteristic characteristic = service.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"));
+//
+//                    characteristic.setValue("B".getBytes());
+//                    mGatt.writeCharacteristic(characteristic);
+//                }
+//            }
+//        });
+//
+//        Button left = (Button) findViewById(R.id.left);
+//        left.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (mGatt != null) {
+//
+//                    BluetoothGattService service = mGatt.getService(UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"));
+//                    BluetoothGattCharacteristic characteristic = service.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"));
+//
+//                    characteristic.setValue("l".getBytes());
+//                    mGatt.writeCharacteristic(characteristic);
+//                }
+//            }
+//        });
+//
+//        Button right = (Button) findViewById(R.id.right);
+//        right.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (mGatt != null) {
+//
+//                    BluetoothGattService service = mGatt.getService(UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"));
+//                    BluetoothGattCharacteristic characteristic = service.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"));
+//
+//                    characteristic.setValue("r".getBytes());
+//                    mGatt.writeCharacteristic(characteristic);
+//                }
+//            }
+//        });
+//
+//        Button stop = (Button) findViewById(R.id.stop);
+//        stop.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (mGatt != null) {
+//
+//                    BluetoothGattService service = mGatt.getService(UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"));
+//                    BluetoothGattCharacteristic characteristic = service.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"));
+//
+//                    characteristic.setValue("s".getBytes());
+//                    mGatt.writeCharacteristic(characteristic);
+//                }
+//            }
+//        });
+
+        JoystickView joystick = (JoystickView) findViewById(R.id.joystick);
+        joystick.setOnMoveListener(new JoystickView.OnMoveListener() {
             @Override
-            public void onClick(View v) {
-                if (mGatt != null) {
+            public void onMove(int angle, int strength) {
+                Log.println(Log.DEBUG, "Test", String.valueOf(angle));
+                Log.println(Log.DEBUG, "Test", String.valueOf(strength));
+                if (strength != 0) {
+                    Log.println(Log.DEBUG, "Test", "Got here");
 
-                    BluetoothGattService service = mGatt.getService(UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"));
-                    BluetoothGattCharacteristic characteristic = service.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"));
+                    if (angle >= 0 && angle <= 90) {
+                        Log.println(Log.DEBUG, "Test", "right");
 
-                    characteristic.setValue("f".getBytes());
-                    mGatt.writeCharacteristic(characteristic);
+                        // right
+                        sendCommand("R");
+                    } else if (angle > 90 && angle <= 180) {
+                        // top aka forward
+                        sendCommand("F");
+                    } else if (angle > 180 && angle <= 270) {
+                        // left
+                        sendCommand("L");
+                    } else {
+                        // bottom - backwards
+                        sendCommand("B");
+                    }
+                }
+                else {
+                    sendCommand("S");
                 }
             }
         });
 
-        Button back = (Button) findViewById(R.id.back);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mGatt != null) {
-
-                    BluetoothGattService service = mGatt.getService(UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"));
-                    BluetoothGattCharacteristic characteristic = service.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"));
-
-                    characteristic.setValue("b".getBytes());
-                    mGatt.writeCharacteristic(characteristic);
-                }
-            }
-        });
-
-        Button left = (Button) findViewById(R.id.left);
-        left.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mGatt != null) {
-
-                    BluetoothGattService service = mGatt.getService(UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"));
-                    BluetoothGattCharacteristic characteristic = service.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"));
-
-                    characteristic.setValue("l".getBytes());
-                    mGatt.writeCharacteristic(characteristic);
-                }
-            }
-        });
-
-        Button right = (Button) findViewById(R.id.right);
-        right.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mGatt != null) {
-
-                    BluetoothGattService service = mGatt.getService(UUID.fromString("0000ffe0-1000-8000-00805f9b34fb"));
-                    BluetoothGattCharacteristic characteristic = service.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"));
-
-                    characteristic.setValue("r".getBytes());
-                    mGatt.writeCharacteristic(characteristic);
-                }
-            }
-        });
 
         final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
@@ -234,7 +283,16 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+    public void sendCommand(String command) {
+            if (mGatt != null) {
 
+            BluetoothGattService service = mGatt.getService(UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"));
+            BluetoothGattCharacteristic characteristic = service.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"));
+            Log.i("sendCommand", command);
+            characteristic.setValue(command.getBytes());
+            mGatt.writeCharacteristic(characteristic);
+        }
+    };
 }
 
 
